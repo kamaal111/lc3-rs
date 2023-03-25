@@ -7,8 +7,11 @@ pub struct Memory {
 
 impl Memory {
     pub fn new() -> Memory {
-        Memory {
-            container: Vec::with_capacity(MAX_MEMORY as usize),
-        }
+        let container_size = MAX_MEMORY as usize;
+        let container = std::iter::repeat(0)
+            .take(container_size)
+            .collect::<Vec<_>>();
+
+        Memory { container }
     }
 }

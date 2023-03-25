@@ -1,4 +1,4 @@
-#[repr(i8)]
+#[repr(u16)]
 pub enum ConditionFlags {
     Positive = 1 << 0,
     Zero = 1 << 1,
