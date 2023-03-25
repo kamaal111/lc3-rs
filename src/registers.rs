@@ -31,8 +31,29 @@ impl Registers {
 
         Registers { container }
     }
+}
 
+impl Registers {
     pub fn set_condition_flag(&mut self, condition_flag: ConditionFlags) {
-        self.container[RegisterCodes::ConditionFlags as usize] = condition_flag as u16
+        self.write(RegisterCodes::ConditionFlags, condition_flag as u16)
+    }
+
+    pub fn set_program_counter(&mut self, value: u16) {
+        self.write(RegisterCodes::ProgramCounter, value)
+    }
+
+    pub fn increment_program_counter(&mut self) -> u16 {
+        let new_value = self.read(RegisterCodes::ProgramCounter) + 1;
+        self.write(RegisterCodes::ProgramCounter, new_value);
+
+        new_value
+    }
+
+    pub fn read(&self, address: RegisterCodes) -> u16 {
+        self.container[address as usize]
+    }
+
+    pub fn write(&mut self, address: RegisterCodes, value: u16) {
+        self.container[address as usize] = value
     }
 }
