@@ -47,22 +47,22 @@ impl VirtualMachine {
 impl VirtualMachine {
     fn perform_instruction(&mut self, opcode: Opcodes, instruction: u16) {
         match opcode {
-            Opcodes::Branch => todo!(),
-            Opcodes::Add => self.registers.add(instruction),
-            Opcodes::Load => todo!(),
-            Opcodes::Store => todo!(),
-            Opcodes::JumpRegister => todo!(),
-            Opcodes::BitwiseAnd => todo!(),
-            Opcodes::LoadRegister => todo!(),
-            Opcodes::StoreRegister => todo!(),
-            Opcodes::Unused => todo!(),
-            Opcodes::Not => todo!(),
-            Opcodes::LoadIndirect => todo!(),
-            Opcodes::StoreIndirect => todo!(),
-            Opcodes::Jump => todo!(),
-            Opcodes::Reserved => todo!(),
-            Opcodes::LoadEffectiveAddress => todo!(),
-            Opcodes::ExecuteTrap => todo!(),
+            Opcodes::Branch => self.registers.perform_branch(),
+            Opcodes::Add => self.registers.perform_add(instruction),
+            Opcodes::Load => self.registers.perform_load(),
+            Opcodes::Store => self.registers.perform_store(),
+            Opcodes::JumpRegister => self.registers.perform_jump_register(),
+            Opcodes::BitwiseAnd => self.registers.perform_bitwise_and(),
+            Opcodes::LoadRegister => self.registers.perform_load_register(),
+            Opcodes::StoreRegister => self.registers.perform_store_register(),
+            Opcodes::Unused => self.registers.perform_unused(),
+            Opcodes::Not => self.registers.perform_not(),
+            Opcodes::LoadIndirect => self.registers.perform_load_indirect(),
+            Opcodes::StoreIndirect => self.registers.perform_store_indirect(),
+            Opcodes::Jump => self.registers.perform_jump_register(),
+            Opcodes::Reserved => self.registers.perform_reserved(),
+            Opcodes::LoadEffectiveAddress => self.registers.perform_load_effective_address(),
+            Opcodes::ExecuteTrap => self.registers.perform_execute_trap(),
         }
     }
 }

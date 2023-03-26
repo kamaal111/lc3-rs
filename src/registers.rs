@@ -79,7 +79,11 @@ impl Registers {
 }
 
 impl Registers {
-    pub fn add(&mut self, instruction: u16) {
+    pub fn perform_branch(&self) {
+        todo!()
+    }
+
+    pub fn perform_add(&mut self, instruction: u16) {
         // destination register (DR)
         let destination_register = RegisterCodes::from((instruction >> 9) & 0x7).unwrap();
         // first operand (SR1)
@@ -103,6 +107,58 @@ impl Registers {
 
         self.write(destination_register.clone(), new_value);
         self.update_flags(destination_register);
+    }
+
+    pub fn perform_load(&self) {
+        todo!()
+    }
+
+    pub fn perform_store(&self) {
+        todo!()
+    }
+
+    pub fn perform_jump_register(&self) {
+        todo!()
+    }
+
+    pub fn perform_bitwise_and(&self) {
+        todo!()
+    }
+
+    pub fn perform_load_register(&self) {
+        todo!()
+    }
+
+    pub fn perform_store_register(&self) {
+        todo!()
+    }
+
+    pub fn perform_unused(&self) {
+        todo!()
+    }
+
+    pub fn perform_not(&self) {
+        todo!()
+    }
+
+    pub fn perform_load_indirect(&self) {
+        todo!()
+    }
+
+    pub fn perform_store_indirect(&self) {
+        todo!()
+    }
+
+    pub fn perform_reserved(&self) {
+        todo!()
+    }
+
+    pub fn perform_load_effective_address(&self) {
+        todo!()
+    }
+
+    pub fn perform_execute_trap(&self) {
+        todo!()
     }
 }
 
