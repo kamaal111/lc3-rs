@@ -2,6 +2,8 @@
 pub mod condition_flags;
 use condition_flags::ConditionFlags;
 
+use super::memory::Memory;
+
 #[derive(Debug)]
 pub struct Registers {
     container: Vec<u16>,
@@ -141,8 +143,16 @@ impl Registers {
         todo!()
     }
 
-    pub fn perform_load_indirect(&self) {
-        todo!()
+    pub fn perform_load_indirect(&mut self, instruction: u16, memory: &mut Memory) {
+        // destination register (DR)
+        let destination_register = RegisterCodes::from((instruction >> 9) & 0x7).unwrap();
+        // PCoffset 9
+        let program_counter_offset = Registers::sign_extend(instruction & 0x1FF, 9);
+        // add pc_offset to the current PC, look at that memory location to get the final address
+        let memory_address =
+            memory.read(self.read(RegisterCodes::ProgramCounter) + program_counter_offset);
+        let memory_value = memory.read(memory_address);
+        self.write(destination_register, memory_value);
     }
 
     pub fn perform_store_indirect(&self) {
