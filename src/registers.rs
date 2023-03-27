@@ -157,8 +157,11 @@ impl Registers {
         todo!()
     }
 
-    pub fn perform_not(&self) {
-        todo!()
+    pub fn perform_not(&mut self, instruction: u16) {
+        let destination_register = RegisterCodes::from((instruction >> 9) & 0x7).unwrap();
+        let first_operand_register = RegisterCodes::from((instruction >> 6) & 0x7).unwrap();
+        let new_value = !self.read(first_operand_register);
+        self.write(destination_register, new_value)
     }
 
     pub fn perform_load_indirect(&mut self, instruction: u16, memory: &mut Memory) {

@@ -55,7 +55,7 @@ impl VirtualMachine {
             Opcodes::LoadRegister => self.registers.perform_load_register(),
             Opcodes::StoreRegister => self.registers.perform_store_register(),
             Opcodes::Unused => self.registers.perform_unused(),
-            Opcodes::Not => self.registers.perform_not(),
+            Opcodes::Not => self.registers.perform_not(instruction),
             Opcodes::LoadIndirect => self
                 .registers
                 .perform_load_indirect(instruction, &mut self.memory),
