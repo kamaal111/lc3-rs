@@ -133,7 +133,24 @@ impl Registers {
     }
 
     pub fn perform_jump_register(&mut self, instruction: u16) {
-        todo!()
+        let program_counter = self.read(RegisterCodes::ProgramCounter);
+        self.write(RegisterCodes::R7, program_counter as u16);
+
+        let new_value = {
+            let long_flag = (instruction >> 11) & 1;
+            if long_flag != 0 {
+                let long_program_counter_offset = Registers::sign_extend(instruction & 0x7FF, 11);
+                let program_counter = self.read(RegisterCodes::ProgramCounter);
+
+                program_counter + long_program_counter_offset
+            } else {
+                let first_operand_register = RegisterCodes::from((instruction >> 6) & 0x7).unwrap();
+
+                self.read(first_operand_register)
+            }
+        };
+
+        self.set_program_counter(new_value);
     }
 
     pub fn perform_bitwise_and(&mut self, instruction: u16) {
