@@ -81,8 +81,17 @@ impl Registers {
 }
 
 impl Registers {
-    pub fn perform_branch(&self) {
-        todo!()
+    pub fn perform_branch(&mut self, instruction: u16) {
+        let program_counter_offset = Registers::sign_extend(instruction & 0x1FF, 9);
+        let condition_flag = RegisterCodes::from((instruction >> 9) & 0x7).unwrap();
+
+        if ((condition_flag as u16) & self.read(RegisterCodes::ConditionFlags)) == 0 {
+            return;
+        }
+
+        let program_counter_value =
+            self.read(RegisterCodes::ProgramCounter) + program_counter_offset;
+        self.set_program_counter(program_counter_value);
     }
 
     pub fn perform_add(&mut self, instruction: u16) {
@@ -166,7 +175,6 @@ impl Registers {
 
     pub fn perform_load_indirect(&mut self, instruction: u16, memory: &mut Memory) {
         let destination_register = RegisterCodes::from((instruction >> 9) & 0x7).unwrap();
-        // PCoffset 9
         let program_counter_offset = Registers::sign_extend(instruction & 0x1FF, 9);
         // add pc_offset to the current PC, look at that memory location to get the final address
         let memory_address =

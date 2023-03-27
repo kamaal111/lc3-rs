@@ -46,7 +46,7 @@ impl VirtualMachine {
 impl VirtualMachine {
     fn perform_instruction(&mut self, opcode: Opcodes, instruction: u16) {
         match opcode {
-            Opcodes::Branch => self.registers.perform_branch(),
+            Opcodes::Branch => self.registers.perform_branch(instruction),
             Opcodes::Add => self.registers.perform_add(instruction),
             Opcodes::Load => self.registers.perform_load(),
             Opcodes::Store => self.registers.perform_store(),
