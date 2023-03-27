@@ -50,7 +50,7 @@ impl VirtualMachine {
             Opcodes::Add => self.registers.perform_add(instruction),
             Opcodes::Load => self.registers.perform_load(),
             Opcodes::Store => self.registers.perform_store(),
-            Opcodes::JumpRegister => self.registers.perform_jump_register(),
+            Opcodes::JumpRegister => self.registers.perform_jump_register(instruction),
             Opcodes::BitwiseAnd => self.registers.perform_bitwise_and(instruction),
             Opcodes::LoadRegister => self.registers.perform_load_register(),
             Opcodes::StoreRegister => self.registers.perform_store_register(),
@@ -60,7 +60,7 @@ impl VirtualMachine {
                 .registers
                 .perform_load_indirect(instruction, &mut self.memory),
             Opcodes::StoreIndirect => self.registers.perform_store_indirect(),
-            Opcodes::Jump => self.registers.perform_jump_register(),
+            Opcodes::Jump => self.registers.perform_jump(instruction),
             Opcodes::Reserved => self.registers.perform_reserved(),
             Opcodes::LoadEffectiveAddress => self.registers.perform_load_effective_address(),
             Opcodes::ExecuteTrap => self.registers.perform_execute_trap(),

@@ -126,7 +126,13 @@ impl Registers {
         todo!()
     }
 
-    pub fn perform_jump_register(&self) {
+    pub fn perform_jump(&mut self, instruction: u16) {
+        let new_value_register = RegisterCodes::from((instruction >> 6) & 0x7).unwrap();
+        let new_value = self.read(new_value_register);
+        self.set_program_counter(new_value);
+    }
+
+    pub fn perform_jump_register(&mut self, instruction: u16) {
         todo!()
     }
 
