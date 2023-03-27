@@ -29,8 +29,7 @@ impl VirtualMachine {
             let opcode = match Opcodes::from(opcode) {
                 Some(value) => value,
                 None => {
-                    println!("bad code");
-                    continue;
+                    panic!("Bad code of {}", opcode);
                 }
             };
 
@@ -52,7 +51,7 @@ impl VirtualMachine {
             Opcodes::Load => self.registers.perform_load(),
             Opcodes::Store => self.registers.perform_store(),
             Opcodes::JumpRegister => self.registers.perform_jump_register(),
-            Opcodes::BitwiseAnd => self.registers.perform_bitwise_and(),
+            Opcodes::BitwiseAnd => self.registers.perform_bitwise_and(instruction),
             Opcodes::LoadRegister => self.registers.perform_load_register(),
             Opcodes::StoreRegister => self.registers.perform_store_register(),
             Opcodes::Unused => self.registers.perform_unused(),

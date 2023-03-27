@@ -86,9 +86,7 @@ impl Registers {
     }
 
     pub fn perform_add(&mut self, instruction: u16) {
-        // destination register (DR)
         let destination_register = RegisterCodes::from((instruction >> 9) & 0x7).unwrap();
-        // first operand (SR1)
         let first_operand_register = RegisterCodes::from((instruction >> 6) & 0x7).unwrap();
         let first_operand_register_value = self.read(first_operand_register);
 
@@ -123,8 +121,28 @@ impl Registers {
         todo!()
     }
 
-    pub fn perform_bitwise_and(&self) {
-        todo!()
+    pub fn perform_bitwise_and(&mut self, instruction: u16) {
+        let destination_register = RegisterCodes::from((instruction >> 9) & 0x7).unwrap();
+        let first_operand_register = RegisterCodes::from((instruction >> 6) & 0x7).unwrap();
+        let first_operand_register_value = self.read(first_operand_register);
+
+        let new_value = {
+            // whether we are in immediate mode
+            let immediate_flag = (instruction >> 5) & 0x1;
+            if immediate_flag != 0 {
+                let immediate5 = Registers::sign_extend(instruction & 0x1F, 5);
+
+                first_operand_register_value & immediate5
+            } else {
+                let second_operand_register = RegisterCodes::from(instruction & 0x7).unwrap();
+                let second_operand_register_value = self.read(second_operand_register);
+
+                first_operand_register_value & second_operand_register_value
+            }
+        };
+
+        self.write(destination_register.clone(), new_value);
+        self.update_flags(destination_register);
     }
 
     pub fn perform_load_register(&self) {
@@ -144,7 +162,6 @@ impl Registers {
     }
 
     pub fn perform_load_indirect(&mut self, instruction: u16, memory: &mut Memory) {
-        // destination register (DR)
         let destination_register = RegisterCodes::from((instruction >> 9) & 0x7).unwrap();
         // PCoffset 9
         let program_counter_offset = Registers::sign_extend(instruction & 0x1FF, 9);
