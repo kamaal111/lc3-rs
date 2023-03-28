@@ -226,8 +226,12 @@ impl Registers {
         todo!()
     }
 
-    pub fn perform_load_effective_address(&self) {
-        todo!()
+    pub fn perform_load_effective_address(&mut self, instruction: u16) {
+        let destination_register = RegisterCodes::from((instruction >> 9) & 0x7).unwrap();
+        let program_counter_offset = Self::sign_extend(instruction & 0x1FF, 9);
+        let new_value = self.read(RegisterCodes::ProgramCounter) + program_counter_offset;
+        self.write(destination_register.clone(), new_value);
+        self.update_flags(destination_register);
     }
 
     pub fn perform_execute_trap(&self) {

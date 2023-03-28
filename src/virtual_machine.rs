@@ -64,7 +64,9 @@ impl VirtualMachine {
             Opcodes::StoreIndirect => self.registers.perform_store_indirect(),
             Opcodes::Jump => self.registers.perform_jump(instruction),
             Opcodes::Reserved => self.registers.perform_reserved(),
-            Opcodes::LoadEffectiveAddress => self.registers.perform_load_effective_address(),
+            Opcodes::LoadEffectiveAddress => {
+                self.registers.perform_load_effective_address(instruction)
+            }
             Opcodes::ExecuteTrap => self.registers.perform_execute_trap(),
         }
     }
