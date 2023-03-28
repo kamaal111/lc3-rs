@@ -32,13 +32,13 @@ impl Memory {
 
         self.container[address as usize]
     }
+
+    pub fn write(&mut self, address: u16, value: u16) {
+        self.container[address as usize] = value
+    }
 }
 
 impl Memory {
-    fn write(&mut self, address: u16, value: u16) {
-        self.container[address as usize] = value
-    }
-
     fn handle_keyboard(&mut self) {
         let mut buffer = [0 as u8; 1];
         std::io::stdin().read_exact(&mut buffer).unwrap();

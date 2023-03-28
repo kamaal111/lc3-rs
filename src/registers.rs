@@ -128,8 +128,11 @@ impl Registers {
         self.update_flags(destination_register);
     }
 
-    pub fn perform_store(&self) {
-        todo!()
+    pub fn perform_store(&mut self, instruction: u16, memory: &mut Memory) {
+        let destination_register = RegisterCodes::from((instruction >> 9) & 0x7).unwrap();
+        let program_counter_offset = Registers::sign_extend(instruction & 0x1FF, 9);
+        let memory_address = self.read(RegisterCodes::ProgramCounter) + program_counter_offset;
+        memory.write(memory_address, self.read(destination_register));
     }
 
     pub fn perform_jump(&mut self, instruction: u16) {

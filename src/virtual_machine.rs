@@ -49,7 +49,7 @@ impl VirtualMachine {
             Opcodes::Branch => self.registers.perform_branch(instruction),
             Opcodes::Add => self.registers.perform_add(instruction),
             Opcodes::Load => self.registers.perform_load(instruction, &mut self.memory),
-            Opcodes::Store => self.registers.perform_store(),
+            Opcodes::Store => self.registers.perform_store(instruction, &mut self.memory),
             Opcodes::JumpRegister => self.registers.perform_jump_register(instruction),
             Opcodes::BitwiseAnd => self.registers.perform_bitwise_and(instruction),
             Opcodes::LoadRegister => self
