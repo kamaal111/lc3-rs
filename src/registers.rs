@@ -221,8 +221,13 @@ impl Registers {
         self.write(destination_register, memory_value);
     }
 
-    pub fn perform_store_indirect(&self) {
-        todo!()
+    pub fn perform_store_indirect(&mut self, instruction: u16, memory: &mut Memory) {
+        let destination_register = RegisterCodes::from((instruction >> 9) & 0x7).unwrap();
+        let program_counter_offset = Self::sign_extend(instruction & 0x1FF, 9);
+        let memory_to_read_address =
+            self.read(RegisterCodes::ProgramCounter) + program_counter_offset;
+        let memory_address = memory.read(memory_to_read_address);
+        memory.write(memory_address, self.read(destination_register));
     }
 
     pub fn perform_reserved(&self) {
