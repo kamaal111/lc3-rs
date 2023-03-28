@@ -118,8 +118,14 @@ impl Registers {
         self.update_flags(destination_register);
     }
 
-    pub fn perform_load(&self) {
-        todo!()
+    pub fn perform_load(&mut self, instruction: u16, memory: &mut Memory) {
+        let destination_register = RegisterCodes::from((instruction >> 9) & 0x7).unwrap();
+        let program_counter_offset = Registers::sign_extend(instruction & 0x1FF, 9);
+        let memory_address =
+            (self.read(RegisterCodes::ProgramCounter) as u16) + program_counter_offset;
+        let new_value = memory.read(memory_address);
+        self.write(destination_register.clone(), new_value);
+        self.update_flags(destination_register);
     }
 
     pub fn perform_store(&self) {
