@@ -52,7 +52,9 @@ impl VirtualMachine {
             Opcodes::Store => self.registers.perform_store(),
             Opcodes::JumpRegister => self.registers.perform_jump_register(instruction),
             Opcodes::BitwiseAnd => self.registers.perform_bitwise_and(instruction),
-            Opcodes::LoadRegister => self.registers.perform_load_register(),
+            Opcodes::LoadRegister => self
+                .registers
+                .perform_load_register(instruction, &mut self.memory),
             Opcodes::StoreRegister => self.registers.perform_store_register(),
             Opcodes::Unused => self.registers.perform_unused(),
             Opcodes::Not => self.registers.perform_not(instruction),
