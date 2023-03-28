@@ -196,8 +196,12 @@ impl Registers {
         self.update_flags(destination_register);
     }
 
-    pub fn perform_store_register(&self) {
-        todo!()
+    pub fn perform_store_register(&mut self, instruction: u16, memory: &mut Memory) {
+        let destination_register = RegisterCodes::from((instruction >> 9) & 0x7).unwrap();
+        let first_operand_register = RegisterCodes::from((instruction >> 6) & 0x7).unwrap();
+        let offset = Self::sign_extend(instruction & 0x3F, 6);
+        let memory_address = self.read(first_operand_register) + offset;
+        memory.write(memory_address, self.read(destination_register));
     }
 
     pub fn perform_unused(&self) {
