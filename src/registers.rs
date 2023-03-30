@@ -44,6 +44,30 @@ impl RegisterCodes {
     }
 }
 
+#[repr(u16)]
+enum TrapCodes {
+    GetCharacter = 0x20,     // GETC
+    OutputCharacter,         // OUT
+    OutputWord,              // PUTS
+    EchoCharacterToTerminal, // IN
+    OutputByteString,        // PUTSP
+    Halt,                    // HALT
+}
+
+impl TrapCodes {
+    fn from(value: u16) -> Option<Self> {
+        match value {
+            0x20 => Some(TrapCodes::GetCharacter),
+            0x21 => Some(TrapCodes::OutputCharacter),
+            0x22 => Some(TrapCodes::OutputWord),
+            0x23 => Some(TrapCodes::EchoCharacterToTerminal),
+            0x24 => Some(TrapCodes::OutputByteString),
+            0x25 => Some(TrapCodes::Halt),
+            _ => None,
+        }
+    }
+}
+
 impl Registers {
     pub fn new() -> Registers {
         let container_size = RegisterCodes::Count as usize;
@@ -204,9 +228,7 @@ impl Registers {
         memory.write(memory_address, self.read(destination_register));
     }
 
-    pub fn perform_unused(&self) {
-        todo!()
-    }
+    pub fn perform_unused(&self) {}
 
     pub fn perform_not(&mut self, instruction: u16) {
         let destination_register = RegisterCodes::from((instruction >> 9) & 0x7).unwrap();
@@ -234,9 +256,7 @@ impl Registers {
         memory.write(memory_address, self.read(destination_register));
     }
 
-    pub fn perform_reserved(&self) {
-        todo!()
-    }
+    pub fn perform_reserved(&self) {}
 
     pub fn perform_load_effective_address(&mut self, instruction: u16) {
         let destination_register = RegisterCodes::from((instruction >> 9) & 0x7).unwrap();
@@ -246,7 +266,46 @@ impl Registers {
         self.update_flags(destination_register);
     }
 
-    pub fn perform_execute_trap(&self) {
+    pub fn perform_execute_trap(&mut self, instruction: u16) {
+        self.write(RegisterCodes::R7, self.read(RegisterCodes::ProgramCounter));
+
+        let trap_code = match TrapCodes::from(instruction & 0xFF) {
+            Some(value) => value,
+            None => return,
+        };
+        match trap_code {
+            TrapCodes::GetCharacter => self.perform_get_character_trap(),
+            TrapCodes::OutputCharacter => self.perform_output_character_trap(),
+            TrapCodes::OutputWord => self.perform_output_word_trap(),
+            TrapCodes::EchoCharacterToTerminal => self.perform_echo_character_to_terminal_trap(),
+            TrapCodes::OutputByteString => self.perform_output_byte_string_trap(),
+            TrapCodes::Halt => self.perform_halt_trap(),
+        }
+    }
+}
+
+impl Registers {
+    fn perform_get_character_trap(&self) {
+        todo!()
+    }
+
+    fn perform_output_character_trap(&self) {
+        todo!()
+    }
+
+    fn perform_output_word_trap(&self) {
+        todo!()
+    }
+
+    fn perform_echo_character_to_terminal_trap(&self) {
+        todo!()
+    }
+
+    fn perform_output_byte_string_trap(&self) {
+        todo!()
+    }
+
+    fn perform_halt_trap(&self) {
         todo!()
     }
 }
