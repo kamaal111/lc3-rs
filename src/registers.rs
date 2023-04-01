@@ -1,5 +1,7 @@
 #[path = "./condition_flags.rs"]
 pub mod condition_flags;
+use std::io::{self, Write};
+
 use condition_flags::ConditionFlags;
 
 use super::memory::Memory;
@@ -266,7 +268,7 @@ impl Registers {
         self.update_flags(destination_register);
     }
 
-    pub fn perform_execute_trap(&mut self, instruction: u16) {
+    pub fn perform_execute_trap(&mut self, instruction: u16, memory: &mut Memory) {
         self.write(RegisterCodes::R7, self.read(RegisterCodes::ProgramCounter));
 
         let trap_code = match TrapCodes::from(instruction & 0xFF) {
@@ -276,7 +278,7 @@ impl Registers {
         match trap_code {
             TrapCodes::GetCharacter => self.perform_get_character_trap(),
             TrapCodes::OutputCharacter => self.perform_output_character_trap(),
-            TrapCodes::OutputWord => self.perform_output_word_trap(),
+            TrapCodes::OutputWord => self.perform_output_word_trap(memory),
             TrapCodes::EchoCharacterToTerminal => self.perform_echo_character_to_terminal_trap(),
             TrapCodes::OutputByteString => self.perform_output_byte_string_trap(),
             TrapCodes::Halt => self.perform_halt_trap(),
@@ -293,8 +295,18 @@ impl Registers {
         todo!()
     }
 
-    fn perform_output_word_trap(&self) {
-        todo!()
+    fn perform_output_word_trap(&mut self, memory: &mut Memory) {
+        let mut memory_address = self.read(RegisterCodes::R0);
+        let mut character = memory.read(memory_address);
+
+        while character != 0x0000 {
+            print!("{}", (character as u8) as char);
+
+            memory_address += 1;
+            character = memory.read(memory_address);
+        }
+
+        io::stdout().flush().expect("failed to flush");
     }
 
     fn perform_echo_character_to_terminal_trap(&self) {

@@ -71,7 +71,9 @@ impl VirtualMachine {
             Opcodes::LoadEffectiveAddress => {
                 self.registers.perform_load_effective_address(instruction)
             }
-            Opcodes::ExecuteTrap => self.registers.perform_execute_trap(instruction),
+            Opcodes::ExecuteTrap => self
+                .registers
+                .perform_execute_trap(instruction, &mut self.memory),
         }
     }
 }
